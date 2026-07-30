@@ -1,6 +1,29 @@
 <?php
-// login.php
 session_start();
+
+$error = "";
+
+$validEmail = "student@university.edu";
+$validPassword = "password123";
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    $email = trim($_POST["email"]);
+    $password = trim($_POST["password"]);
+
+    if ($email === $validEmail && $password === $validPassword) {
+
+        $_SESSION["email"] = $email;
+
+        header("Location: dashboard.php");
+        exit();
+
+    } else {
+
+        $error = "Invalid email or password.";
+
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -19,6 +42,11 @@ session_start();
     <div class="login-container">
         <h1>UniMarket</h1>
         <p>Student Marketplace Login</p>
+
+
+                <?php if (!empty($error)) : ?>
+            <p class="error-message"><?php echo $error; ?></p>
+        <?php endif; ?>
 
         <form method="POST" action="">
             <div class="form-group">
