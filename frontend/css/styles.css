@@ -478,3 +478,26 @@ body {
         display: flex;
     }
 }
+
+
+/* ==========================================================================
+   Dashboard
+   ========================================================================== */
+
+.dashboard {
+    max-width: 800px;
+    margin: 60px auto;
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard h1 {
+    color: #14326e;
+    margin-bottom: 20px;
+}
+
+.dashboard-actions {
+    margin-top: 30px;
+}
