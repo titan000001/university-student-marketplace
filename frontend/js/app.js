@@ -12,6 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     console.log("UniMarket JavaScript initialized.");
     const categoriesContainer = document.querySelector("#categories-container");
+    const statisticsContainer = document.querySelector("#statistics-container");
+    
     const categories = [
     {
         title: "📚 Textbooks",
@@ -30,6 +32,24 @@ document.addEventListener("DOMContentLoaded", () => {
         description: "Tutoring, printing and more."
     }
 ];
+    const statistics = [
+    {
+        title: "Active Listings",
+        value: "--"
+    },
+    {
+        title: "Verified Students",
+        value: "--"
+    },
+    {
+        title: "Successful Trades",
+        value: "--"
+    },
+    {
+        title: "Registered Campuses",
+        value: "--"
+    }
+];
 
 if (categoriesContainer) {
 
@@ -44,6 +64,24 @@ if (categoriesContainer) {
         `;
 
         categoriesContainer.appendChild(card);
+
+    });
+
+}
+
+    if (statisticsContainer) {
+
+    statistics.forEach(stat => {
+
+        const card = document.createElement("article");
+        card.className = "stat-card";
+
+        card.innerHTML = `
+            <h3>${stat.title}</h3>
+            <p class="stat-number">${stat.value}</p>
+        `;
+
+        statisticsContainer.appendChild(card);
 
     });
 
