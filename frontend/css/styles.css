@@ -318,3 +318,59 @@ gap:10px;
     margin-bottom:15px;
 
 }
+
+/* ===========================
+   Planned Platform Features
+=========================== */
+
+.roadmap-section{
+    padding:70px 20px;
+    text-align:center;
+}
+
+.roadmap-section h2{
+    color:#14326e;
+    margin-bottom:40px;
+}
+
+.roadmap-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:25px;
+}
+
+.roadmap-card{
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 4px 10px rgba(0,0,0,.08);
+}
+
+.roadmap-card h3{
+    color:#14326e;
+    margin-bottom:15px;
+}
+
+.status{
+    display:inline-block;
+    margin-top:20px;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:.85rem;
+    font-weight:bold;
+}
+
+.planned{
+    background:#e8f0ff;
+    color:#14326e;
+}
+
+.progress{
+    background:#fff3cd;
+    color:#856404;
+}
+
+.future{
+    background:#eeeeee;
+    color:#555;
+}
