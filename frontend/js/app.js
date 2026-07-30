@@ -1,16 +1,13 @@
-/*
-=========================================
-UniMarket
-Week 3 - Development Package 01
-JavaScript Foundation
-=========================================
-*/
+/**
+ * ============================================================================
+ * UniMarket - University Student Marketplace
+ * Client-side Application Scripts
+ * ============================================================================
+ */
 
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("UniMarket JavaScript initialized.");
-
     // DOM Element Selectors
     const categoriesContainer = document.querySelector("#categories-container");
     const statisticsContainer = document.querySelector("#statistics-container");
@@ -57,83 +54,120 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     ];
 
-    // Render Categories
-    if (categoriesContainer) {
+    /**
+     * Renders category cards into the categories section container
+     */
+    function renderCategories() {
+        if (!categoriesContainer) return;
+
+        categoriesContainer.innerHTML = "";
         categories.forEach((category) => {
             const card = document.createElement("article");
             card.className = "category-card";
 
-            card.innerHTML = `
-                <h3>${category.title}</h3>
-                <p>${category.description}</p>
-            `;
+            const title = document.createElement("h3");
+            title.textContent = category.title;
 
+            const desc = document.createElement("p");
+            desc.textContent = category.description;
+
+            card.appendChild(title);
+            card.appendChild(desc);
             categoriesContainer.appendChild(card);
         });
     }
 
-    // Render Statistics
-    if (statisticsContainer) {
+    /**
+     * Renders marketplace statistics cards into the statistics container
+     */
+    function renderStatistics() {
+        if (!statisticsContainer) return;
+
+        statisticsContainer.innerHTML = "";
         statistics.forEach((stat) => {
             const card = document.createElement("article");
             card.className = "stat-card";
 
-            card.innerHTML = `
-                <h3>${stat.title}</h3>
-                <p class="stat-number">${stat.value}</p>
-            `;
+            const title = document.createElement("h3");
+            title.textContent = stat.title;
 
+            const number = document.createElement("p");
+            number.className = "stat-number";
+            number.textContent = stat.value;
+
+            card.appendChild(title);
+            card.appendChild(number);
             statisticsContainer.appendChild(card);
         });
     }
 
-    // Mobile Navigation Menu Toggle
-    if (menuToggle && navigationList) {
+    /**
+     * Initializes mobile navigation toggle behavior with accessibility attributes
+     */
+    function initMobileNav() {
+        if (!menuToggle || !navigationList) return;
+
+        menuToggle.setAttribute("aria-expanded", "false");
         menuToggle.addEventListener("click", () => {
-            navigationList.classList.toggle("active");
+            const isOpen = navigationList.classList.toggle("active");
+            menuToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
         });
     }
 
-    // Registration Form Submission Handling
-    if (registrationForm) {
+    /**
+     * Handles student registration form submission and validation
+     */
+    function initRegistrationForm() {
+        if (!registrationForm) return;
+
         registrationForm.addEventListener("submit", (event) => {
             event.preventDefault();
 
-            const fullName = document.querySelector("#full-name").value;
-            const email = document.querySelector("#email").value;
-            const studentId = document.querySelector("#student-id").value;
-            const department = document.querySelector("#department").value;
-            const password = document.querySelector("#password").value;
+            const fullNameInput = document.querySelector("#full-name");
+            const emailInput = document.querySelector("#email");
+            const studentIdInput = document.querySelector("#student-id");
+            const departmentInput = document.querySelector("#department");
+            const passwordInput = document.querySelector("#password");
             const formMessage = document.querySelector("#form-message");
 
-            if (
-                fullName === "" ||
-                email === "" ||
-                studentId === "" ||
-                department === "" ||
-                password === ""
-            ) {
+            const fullName = fullNameInput ? fullNameInput.value.trim() : "";
+            const email = emailInput ? emailInput.value.trim() : "";
+            const studentId = studentIdInput ? studentIdInput.value.trim() : "";
+            const department = departmentInput ? departmentInput.value.trim() : "";
+            const password = passwordInput ? passwordInput.value : "";
+
+            if (!formMessage) return;
+
+            // Reset status classes
+            formMessage.className = "";
+
+            if (!fullName || !email || !studentId || !department || !password) {
                 formMessage.textContent = "Please fill in all fields.";
+                formMessage.classList.add("error");
                 return;
             }
 
             if (!email.includes("@")) {
                 formMessage.textContent = "Please enter a valid email address.";
+                formMessage.classList.add("error");
                 return;
             }
 
             if (password.length < 6) {
                 formMessage.textContent = "Password must be at least 6 characters.";
+                formMessage.classList.add("error");
                 return;
             }
 
-            formMessage.textContent = "Registration Successful!";
-
-            console.log("Student Registration");
-            console.log("Name:", fullName);
-            console.log("Email:", email);
-            console.log("Student ID:", studentId);
-            console.log("Department:", department);
+            formMessage.textContent = "Your details were validated. Account creation will be available in a future release.";
+            formMessage.classList.add("success");
+            registrationForm.reset();
         });
     }
+
+    // Initialize Page Component Operations
+    renderCategories();
+    renderStatistics();
+    initMobileNav();
+    initRegistrationForm();
 });

@@ -1,9 +1,26 @@
+<?php
+
+/**
+ * UniMarket - University Student Marketplace Homepage
+ */
+
+require_once __DIR__ . '/../includes/session.php';
+
+startApplicationSession();
+
+$isLoggedIn = isset($_SESSION["email"]);
+
+$csrfToken = $isLoggedIn ? getCsrfToken() : '';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="UniMarket - A closed, campus-exclusive peer-to-peer marketplace for university students.">
     <title>UniMarket | University Student Marketplace</title>
+
+    <!-- Global Stylesheet -->
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
@@ -12,31 +29,41 @@
     <header class="site-header">
         <div class="container header-container">
             <div class="logo-area">
-                <h1 class="logo">UniMarket</h1>
+                <h1 class="logo"><a href="index.php">UniMarket</a></h1>
                 <span class="tagline">University Student Marketplace</span>
             </div>
             <div class="header-actions">
-                <a href="#" class="btn-outline">Sign In</a>
-                <a href="#" class="btn-primary">Post Item</a>
+                <?php if ($isLoggedIn) : ?>
+                    <a href="dashboard.php" class="btn-outline">Dashboard</a>
+                    <form class="logout-form" method="POST" action="logout.php">
+                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken, ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8"); ?>">
+                        <button type="submit" class="btn-primary">Logout</button>
+                    </form>
+                <?php else : ?>
+                    <a href="login.php" class="btn-outline">Sign In</a>
+                    <a href="#register" class="btn-primary">Post Item</a>
+                <?php endif; ?>
             </div>
         </div>
     </header>
 
     <!-- Navigation -->
-    <nav class="main-nav">
+    <nav class="main-nav" aria-label="Main Navigation">
         <div class="container">
             <button
                 id="menu-toggle"
                 class="menu-toggle"
-                aria-label="Toggle Navigation">
+                aria-label="Toggle Navigation"
+                aria-expanded="false"
+                aria-controls="primary-navigation">
                 ☰
             </button>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Marketplace</a></li>
-                <li><a href="#">Categories</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
+            <ul id="primary-navigation">
+                <li><a href="index.php" class="active" aria-current="page">Home</a></li>
+                <li><a href="#categories">Marketplace</a></li>
+                <li><a href="#categories">Categories</a></li>
+                <li><a href="#workflow">About</a></li>
+                <li><a href="#register">Contact</a></li>
             </ul>
         </div>
     </nav>
@@ -51,8 +78,8 @@
                 and more.
             </p>
             <div class="hero-buttons">
-                <a href="#" class="btn-primary">Explore Marketplace</a>
-                <a href="#" class="btn-outline">Post Your Item</a>
+                <a href="#categories" class="btn-primary">Explore Marketplace</a>
+                <a href="#register" class="btn-outline">Post Your Item</a>
             </div>
         </div>
     </section>
@@ -62,7 +89,7 @@
         <div class="container">
 
             <!-- Featured Categories -->
-            <section class="categories-section">
+            <section id="categories" class="categories-section">
                 <h2>Featured Categories</h2>
                 <div
                     id="categories-container"
@@ -71,9 +98,8 @@
             </section>
 
             <!-- Marketplace Statistics -->
-            <section class="statistics-section">
+            <section id="statistics" class="statistics-section">
                 <h2>Marketplace Statistics</h2>
-
                 <div
                     id="statistics-container"
                     class="statistics-grid">
@@ -81,16 +107,19 @@
             </section>
 
             <!-- Student Registration -->
-            <section class="registration-section">
+            <section id="register" class="registration-section">
                 <h2>Student Registration</h2>
 
-                <form id="registration-form" class="registration-form">
+                <form id="registration-form" class="registration-form" action="#" method="POST">
                     <div class="form-group">
                         <label for="full-name">Full Name</label>
                         <input
                             type="text"
                             id="full-name"
-                            name="full-name">
+                            name="full-name"
+                            placeholder="Enter your full name"
+                            autocomplete="name"
+                            required>
                     </div>
 
                     <div class="form-group">
@@ -98,7 +127,10 @@
                         <input
                             type="email"
                             id="email"
-                            name="email">
+                            name="email"
+                            placeholder="student@university.edu"
+                            autocomplete="email"
+                            required>
                     </div>
 
                     <div class="form-group">
@@ -106,7 +138,9 @@
                         <input
                             type="text"
                             id="student-id"
-                            name="student-id">
+                            name="student-id"
+                            placeholder="e.g. 2026-10492"
+                            required>
                     </div>
 
                     <div class="form-group">
@@ -114,7 +148,9 @@
                         <input
                             type="text"
                             id="department"
-                            name="department">
+                            name="department"
+                            placeholder="e.g. Computer Science"
+                            required>
                     </div>
 
                     <div class="form-group">
@@ -122,18 +158,21 @@
                         <input
                             type="password"
                             id="password"
-                            name="password">
+                            name="password"
+                            placeholder="At least 6 characters"
+                            autocomplete="new-password"
+                            required>
                     </div>
 
                     <button type="submit" class="btn-primary">
                         Register
                     </button>
-                    <p id="form-message"></p>
+                    <p id="form-message" role="status" aria-live="polite"></p>
                 </form>
             </section>
 
             <!-- How It Works -->
-            <section class="workflow-section">
+            <section id="workflow" class="workflow-section">
                 <h2>How UniMarket Works</h2>
                 <div class="workflow-grid">
                     <article class="workflow-card">
@@ -164,7 +203,7 @@
             </section>
 
             <!-- Planned Platform Features -->
-            <section class="roadmap-section">
+            <section id="roadmap" class="roadmap-section">
                 <h2>Planned Platform Features</h2>
                 <div class="roadmap-grid">
                     <article class="roadmap-card">
