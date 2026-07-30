@@ -1,0 +1,89 @@
+/* ===========================
+   UniMarket
+   Development Package 02
+=========================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f6f9;
+    color: #333;
+
+}
+
+.container {
+
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+
+}
+
+.site-header {
+
+    background: #14326e;
+    color: white;
+    padding: 20px;
+
+}
+
+.logo {
+
+    font-size: 2rem;
+
+}
+
+.main-nav {
+
+    background: #ffffff;
+    border-bottom: 1px solid #ddd;
+
+}
+
+.main-nav ul {
+
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    padding: 15px 0;
+
+}
+
+.main-nav a {
+
+    text-decoration: none;
+    color: #14326e;
+    font-weight: bold;
+
+}
+
+.main-content {
+
+    padding: 60px 0;
+
+}
+
+.placeholder-section {
+
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+
+}
+
+.site-footer {
+
+    background: #14326e;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 60px;
+
+}
