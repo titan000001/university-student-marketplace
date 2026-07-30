@@ -41,3 +41,10 @@
 .form-group input {
     width: 100%;
 }
+
+.error-message {
+    color: #d9534f;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
