@@ -29,6 +29,10 @@ if (!isset($_SESSION["email"])) {
         <strong><?php echo htmlspecialchars($_SESSION["email"]); ?></strong>
     </p>
 
+    <div class="dashboard-actions">
+        <a href="logout.php" class="btn-primary">Logout</a>
+    </div>
+
 </div>
 
 </body>
