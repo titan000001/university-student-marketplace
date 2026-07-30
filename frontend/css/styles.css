@@ -276,3 +276,45 @@ gap:10px;
     margin-top:15px;
 
 }
+
+/* ===========================
+   How It Works
+=========================== */
+
+.workflow-section{
+
+    padding:70px 20px;
+    text-align:center;
+
+}
+
+.workflow-section h2{
+
+    color:#14326e;
+    margin-bottom:40px;
+
+}
+
+.workflow-grid{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:25px;
+
+}
+
+.workflow-card{
+
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 4px 10px rgba(0,0,0,.08);
+
+}
+
+.workflow-card h3{
+
+    color:#14326e;
+    margin-bottom:15px;
+
+}
