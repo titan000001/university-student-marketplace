@@ -196,3 +196,181 @@ gap:10px;
     gap:15px;
     flex-wrap:wrap;
 }
+
+/* ===========================
+   Featured Categories
+=========================== */
+
+.categories-section{
+    padding:70px 20px;
+    text-align:center;
+}
+
+.categories-section h2{
+    color:#14326e;
+    margin-bottom:40px;
+}
+
+.categories-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:25px;
+}
+
+.category-card{
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 4px 10px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.category-card:hover{
+    transform:translateY(-5px);
+}
+
+.category-card h3{
+    margin-bottom:15px;
+    color:#14326e;
+}
+
+/* ===========================
+   Marketplace Statistics
+=========================== */
+
+.statistics-section{
+
+    padding:70px 20px;
+    text-align:center;
+
+}
+
+.statistics-section h2{
+
+    color:#14326e;
+    margin-bottom:40px;
+
+}
+
+.statistics-grid{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:25px;
+
+}
+
+.stat-card{
+
+    background:#14326e;
+    color:white;
+    padding:30px;
+    border-radius:10px;
+
+}
+
+.stat-number{
+
+    font-size:2rem;
+    font-weight:bold;
+    margin-top:15px;
+
+}
+
+/* ===========================
+   How It Works
+=========================== */
+
+.workflow-section{
+
+    padding:70px 20px;
+    text-align:center;
+
+}
+
+.workflow-section h2{
+
+    color:#14326e;
+    margin-bottom:40px;
+
+}
+
+.workflow-grid{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:25px;
+
+}
+
+.workflow-card{
+
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 4px 10px rgba(0,0,0,.08);
+
+}
+
+.workflow-card h3{
+
+    color:#14326e;
+    margin-bottom:15px;
+
+}
+
+/* ===========================
+   Planned Platform Features
+=========================== */
+
+.roadmap-section{
+    padding:70px 20px;
+    text-align:center;
+}
+
+.roadmap-section h2{
+    color:#14326e;
+    margin-bottom:40px;
+}
+
+.roadmap-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:25px;
+}
+
+.roadmap-card{
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 4px 10px rgba(0,0,0,.08);
+}
+
+.roadmap-card h3{
+    color:#14326e;
+    margin-bottom:15px;
+}
+
+.status{
+    display:inline-block;
+    margin-top:20px;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:.85rem;
+    font-weight:bold;
+}
+
+.planned{
+    background:#e8f0ff;
+    color:#14326e;
+}
+
+.progress{
+    background:#fff3cd;
+    color:#856404;
+}
+
+.future{
+    background:#eeeeee;
+    color:#555;
+}
