@@ -109,6 +109,37 @@ if (categoriesContainer) {
             const email = document.querySelector("#email").value;
             const studentId = document.querySelector("#student-id").value;
             const department = document.querySelector("#department").value;
+            const password = document.querySelector("#password").value;
+            const formMessage = document.querySelector("#form-message");
+
+        if (
+                fullName === "" ||
+                email === "" ||
+                studentId === "" ||
+                department === "" ||
+                password === ""
+            ) {
+
+                formMessage.textContent = "Please fill in all fields.";
+                return;
+
+            }
+
+            if (!email.includes("@")) {
+
+                formMessage.textContent = "Please enter a valid email address.";
+                return;
+
+            }
+
+            if (password.length < 6) {
+
+                formMessage.textContent = "Password must be at least 6 characters.";
+                return;
+
+            }
+
+            formMessage.textContent = "Registration Successful!";
 
             console.log("Student Registration");
             console.log("Name:", fullName);
