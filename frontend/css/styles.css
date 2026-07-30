@@ -3,6 +3,9 @@
    Stylesheets
    ========================================================================== */
 
+/* ==========================================================================
+   Reset & Base Styles
+   ========================================================================== */
 * {
     margin: 0;
     padding: 0;
@@ -94,18 +97,24 @@ body {
     border-bottom: 1px solid #dddddd;
 }
 
-.main-nav ul {
-    list-style: none;
+.main-nav .container {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.main-nav ul {
+    display: flex;
+    flex-wrap: wrap;
     gap: 20px;
     padding: 15px 0;
-    flex-wrap: wrap;
+    list-style: none;
 }
 
 .main-nav a {
-    text-decoration: none;
     color: #14326e;
     font-weight: bold;
+    text-decoration: none;
     transition: color 0.2s ease;
 }
 
@@ -113,15 +122,24 @@ body {
     color: #0d2350;
 }
 
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: #14326e;
+    font-size: 1.8rem;
+    cursor: pointer;
+}
+
 /* ==========================================================================
    Hero Banner
    ========================================================================== */
 .hero-section {
-    background-color: #ffffff;
-    padding: 80px 20px;
-    text-align: center;
-    border-radius: 10px;
     margin-top: 20px;
+    padding: 80px 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    text-align: center;
 }
 
 .hero-content {
@@ -130,23 +148,23 @@ body {
 }
 
 .hero-content h2 {
-    font-size: 2.4rem;
     margin-bottom: 20px;
     color: #14326e;
+    font-size: 2.4rem;
 }
 
 .hero-content p {
-    font-size: 1.1rem;
-    line-height: 1.7;
     margin-bottom: 30px;
     color: #555555;
+    font-size: 1.1rem;
+    line-height: 1.7;
 }
 
 .hero-buttons {
     display: flex;
     justify-content: center;
-    gap: 15px;
     flex-wrap: wrap;
+    gap: 15px;
 }
 
 .hero-buttons .btn-outline {
@@ -183,9 +201,9 @@ body {
 }
 
 .categories-section h2 {
+    margin-bottom: 40px;
     color: #14326e;
     font-size: 1.8rem;
-    margin-bottom: 40px;
 }
 
 .categories-grid {
@@ -195,8 +213,8 @@ body {
 }
 
 .category-card {
-    background-color: #ffffff;
     padding: 30px;
+    background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -226,9 +244,9 @@ body {
 }
 
 .statistics-section h2 {
+    margin-bottom: 40px;
     color: #14326e;
     font-size: 1.8rem;
-    margin-bottom: 40px;
 }
 
 .statistics-grid {
@@ -238,9 +256,9 @@ body {
 }
 
 .stat-card {
+    padding: 30px;
     background-color: #14326e;
     color: #ffffff;
-    padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
@@ -251,9 +269,9 @@ body {
 }
 
 .stat-number {
+    margin-top: 15px;
     font-size: 2rem;
     font-weight: bold;
-    margin-top: 15px;
 }
 
 /* ==========================================================================
@@ -265,9 +283,9 @@ body {
 }
 
 .workflow-section h2 {
+    margin-bottom: 40px;
     color: #14326e;
     font-size: 1.8rem;
-    margin-bottom: 40px;
 }
 
 .workflow-grid {
@@ -277,8 +295,8 @@ body {
 }
 
 .workflow-card {
-    background-color: #ffffff;
     padding: 30px;
+    background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s ease;
@@ -289,8 +307,8 @@ body {
 }
 
 .workflow-card h3 {
-    color: #14326e;
     margin-bottom: 15px;
+    color: #14326e;
 }
 
 .workflow-card p {
@@ -307,9 +325,9 @@ body {
 }
 
 .roadmap-section h2 {
+    margin-bottom: 40px;
     color: #14326e;
     font-size: 1.8rem;
-    margin-bottom: 40px;
 }
 
 .roadmap-grid {
@@ -319,8 +337,8 @@ body {
 }
 
 .roadmap-card {
-    background-color: #ffffff;
     padding: 30px;
+    background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s ease;
@@ -331,8 +349,8 @@ body {
 }
 
 .roadmap-card h3 {
-    color: #14326e;
     margin-bottom: 15px;
+    color: #14326e;
 }
 
 .roadmap-card p {
@@ -367,23 +385,22 @@ body {
 /* ==========================================================================
    Student Registration
    ========================================================================== */
-
 .registration-section {
     padding: 50px 0;
 }
 
 .registration-section h2 {
-    text-align: center;
-    color: #14326e;
     margin-bottom: 30px;
+    color: #14326e;
     font-size: 1.8rem;
+    text-align: center;
 }
 
 .registration-form {
     max-width: 600px;
     margin: 0 auto;
-    background-color: #ffffff;
     padding: 30px;
+    background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
@@ -394,9 +411,9 @@ body {
 
 .form-group label {
     display: block;
-    font-weight: bold;
     margin-bottom: 8px;
     color: #14326e;
+    font-weight: bold;
 }
 
 .form-group input {
@@ -411,15 +428,22 @@ body {
     width: 100%;
 }
 
+#form-message {
+    margin-top: 15px;
+    color: #14326e;
+    font-weight: bold;
+    text-align: center;
+}
+
 /* ==========================================================================
    Footer
    ========================================================================== */
 .site-footer {
+    margin-top: 60px;
+    padding: 25px 0;
     background-color: #14326e;
     color: #ffffff;
     text-align: center;
-    padding: 25px 0;
-    margin-top: 60px;
 }
 
 .site-footer .container {
@@ -431,42 +455,26 @@ body {
 }
 
 .site-footer p {
-    font-size: 0.9rem;
     color: #d9e4ff;
+    font-size: 0.9rem;
 }
 
-.menu-toggle{
-    display:none;
-    background:none;
-    border:none;
-    font-size:1.8rem;
-    cursor:pointer;
-    color:#14326e;
-}
-
-/* Desktop */
-.main-nav .container{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-/* Mobile */
-@media (max-width:768px){
-
-    .menu-toggle{
-        display:block;
+/* ==========================================================================
+   Media Queries / Responsive Layout
+   ========================================================================== */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
     }
 
-    .main-nav ul{
-        display:none;
-        flex-direction:column;
-        width:100%;
-        margin-top:15px;
+    .main-nav ul {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        margin-top: 15px;
     }
 
-    .main-nav ul.active{
-        display:flex;
+    .main-nav ul.active {
+        display: flex;
     }
-
 }
