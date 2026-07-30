@@ -43,6 +43,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <h1>UniMarket</h1>
         <p>Student Marketplace Login</p>
 
+
+                <?php if (!empty($error)) : ?>
+            <p class="error-message"><?php echo $error; ?></p>
+        <?php endif; ?>
+
         <form method="POST" action="">
             <div class="form-group">
                 <label for="email">University Email</label>
