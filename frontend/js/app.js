@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("UniMarket JavaScript initialized.");
     const categoriesContainer = document.querySelector("#categories-container");
     const statisticsContainer = document.querySelector("#statistics-container");
+    const registrationForm = document.querySelector("#registration-form");
     
     const categories = [
     {
@@ -94,6 +95,27 @@ if (categoriesContainer) {
 
         menuToggle.addEventListener("click", () => {
             navigationList.classList.toggle("active");
+        });
+
+    }
+
+    if (registrationForm) {
+
+        registrationForm.addEventListener("submit", (event) => {
+
+            event.preventDefault();
+
+            const fullName = document.querySelector("#full-name").value;
+            const email = document.querySelector("#email").value;
+            const studentId = document.querySelector("#student-id").value;
+            const department = document.querySelector("#department").value;
+
+            console.log("Student Registration");
+            console.log("Name:", fullName);
+            console.log("Email:", email);
+            console.log("Student ID:", studentId);
+            console.log("Department:", department);
+
         });
 
     }
