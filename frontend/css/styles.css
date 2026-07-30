@@ -233,3 +233,46 @@ gap:10px;
     margin-bottom:15px;
     color:#14326e;
 }
+
+/* ===========================
+   Marketplace Statistics
+=========================== */
+
+.statistics-section{
+
+    padding:70px 20px;
+    text-align:center;
+
+}
+
+.statistics-section h2{
+
+    color:#14326e;
+    margin-bottom:40px;
+
+}
+
+.statistics-grid{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:25px;
+
+}
+
+.stat-card{
+
+    background:#14326e;
+    color:white;
+    padding:30px;
+    border-radius:10px;
+
+}
+
+.stat-number{
+
+    font-size:2rem;
+    font-weight:bold;
+    margin-top:15px;
+
+}
