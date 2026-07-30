@@ -387,3 +387,39 @@ body {
     font-size: 0.9rem;
     color: #d9e4ff;
 }
+
+.menu-toggle{
+    display:none;
+    background:none;
+    border:none;
+    font-size:1.8rem;
+    cursor:pointer;
+    color:#14326e;
+}
+
+/* Desktop */
+.main-nav .container{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+/* Mobile */
+@media (max-width:768px){
+
+    .menu-toggle{
+        display:block;
+    }
+
+    .main-nav ul{
+        display:none;
+        flex-direction:column;
+        width:100%;
+        margin-top:15px;
+    }
+
+    .main-nav ul.active{
+        display:flex;
+    }
+
+}
