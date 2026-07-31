@@ -16,7 +16,7 @@
                 <span class="tagline">University Student Marketplace</span>
             </div>
             <div class="header-actions">
-                <a href="#" class="btn-outline">Sign In</a>
+                <a href="login.php" class="btn-outline">Sign In</a>
                 <a href="#" class="btn-primary">Post Item</a>
             </div>
         </div>

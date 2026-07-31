@@ -1,10 +1,15 @@
 <?php
-session_start();
 
-if (!isset($_SESSION["email"])) {
-    header("Location: login.php");
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
     exit();
 }
+
+$fullName = htmlspecialchars((string) $_SESSION['full_name'], ENT_QUOTES, 'UTF-8');
 ?>
 
 <!DOCTYPE html>
@@ -14,7 +19,7 @@ if (!isset($_SESSION["email"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UniMarket Dashboard</title>
 
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
 
@@ -22,11 +27,11 @@ if (!isset($_SESSION["email"])) {
 
     <h1>Dashboard</h1>
 
-    <p>Welcome to UniMarket!</p>
+    <p>Welcome to UniMarket, <strong><?php echo $fullName; ?></strong>!</p>
 
     <p>
         Logged in as:
-        <strong><?php echo htmlspecialchars($_SESSION["email"]); ?></strong>
+        <strong><?php echo $fullName; ?></strong>
     </p>
 
     <div class="dashboard-actions">
