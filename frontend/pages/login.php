@@ -1,28 +1,54 @@
 <?php
-session_start();
+
+require_once __DIR__ . '/../../backend/config/database.php';
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+if (isset($_SESSION['user_id'])) {
+    header('Location: dashboard.php');
+    exit();
+}
 
 $error = "";
 
-$validEmail = "student@university.edu";
-$validPassword = "password123";
-
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $email = isset($_POST['email']) ? trim($_POST['email']) : '';
+    $password = isset($_POST['password']) ? $_POST['password'] : '';
 
-    $email = trim($_POST["email"]);
-    $password = trim($_POST["password"]);
+    try {
+        $database = new Database();
+        $connection = $database->connect();
+        $statement = $connection->prepare(
+            'SELECT user_id, full_name, role, password_hash FROM users WHERE email = :email LIMIT 1'
+        );
+        $statement->execute(['email' => $email]);
+        $user = $statement->fetch();
 
-    if ($email === $validEmail && $password === $validPassword) {
+        $passwordIsValid = false;
 
-        $_SESSION["email"] = $email;
+        if ($user) {
+            $passwordInfo = password_get_info($user['password_hash']);
+            $passwordIsValid = $passwordInfo['algo'] !== null
+                ? password_verify($password, $user['password_hash'])
+                : hash_equals($user['password_hash'], $password);
+        }
 
-        header("Location: dashboard.php");
-        exit();
+        if ($passwordIsValid) {
+            session_regenerate_id(true);
+            $_SESSION['user_id'] = (int) $user['user_id'];
+            $_SESSION['full_name'] = $user['full_name'];
+            $_SESSION['role'] = $user['role'];
 
-    } else {
-
-        $error = "Invalid email or password.";
-
+            header('Location: dashboard.php');
+            exit();
+        }
+    } catch (PDOException $exception) {
+        error_log($exception->getMessage());
     }
+
+    $error = 'Invalid email or password.';
 }
 ?>
 
@@ -34,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <title>UniMarket - Login</title>
 
     <!-- Reuse your existing stylesheet -->
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/login.css">
 </head>
 <body class="login-page">
@@ -45,10 +71,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
                 <?php if (!empty($error)) : ?>
-            <p class="error-message"><?php echo $error; ?></p>
+            <p class="error-message"><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></p>
         <?php endif; ?>
 
-        <form method="POST" action="">
+        <form method="POST" action="login.php">
             <div class="form-group">
                 <label for="email">University Email</label>
                 <input

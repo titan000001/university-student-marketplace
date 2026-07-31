@@ -16,7 +16,7 @@ VALUES
 'rahim@university.edu',
 'CSE22001',
 'CSE',
-'temp_hash',
+'$2y$10$/keEAc.Cwuu5NRqvpBUvmuHVMZern7d4FhBEv4y4Jc8KdmfhZZ3ye',
 'student'
 ),
 (
@@ -24,7 +24,7 @@ VALUES
 'karim@university.edu',
 'CSE22002',
 'CSE',
-'temp_hash',
+'$2y$10$/keEAc.Cwuu5NRqvpBUvmuHVMZern7d4FhBEv4y4Jc8KdmfhZZ3ye',
 'student'
 ),
 (
@@ -32,7 +32,7 @@ VALUES
 'admin@university.edu',
 'ADMIN001',
 'Administration',
-'temp_hash',
+'$2y$10$/keEAc.Cwuu5NRqvpBUvmuHVMZern7d4FhBEv4y4Jc8KdmfhZZ3ye',
 'admin'
 );
 
