@@ -1,4 +1,8 @@
 <?php
+/**
+ * Database Configuration Constants
+ * UniMarket - University Student Marketplace
+ */
 
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'university_student_marketplace');

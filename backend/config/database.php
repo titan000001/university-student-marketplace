@@ -1,11 +1,25 @@
 <?php
+/**
+ * Database Connection Wrapper
+ * UniMarket - University Student Marketplace
+ */
 
 require_once __DIR__ . '/config.php';
 
 class Database
 {
+    /**
+     * Singleton PDO connection instance.
+     *
+     * @var PDO|null
+     */
     private ?PDO $connection = null;
 
+    /**
+     * Establish and return the PDO database connection.
+     *
+     * @return PDO
+     */
     public function connect(): PDO
     {
         if ($this->connection === null) {
