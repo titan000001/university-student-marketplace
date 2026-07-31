@@ -2,9 +2,21 @@
 /**
  * Database Configuration Constants
  * UniMarket - University Student Marketplace
+ *
+ * @package UniMarket\Config
  */
 
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'university_student_marketplace');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+// Prevent direct access
+if (!defined('DB_HOST')) {
+    define('DB_HOST', 'localhost');
+}
+if (!defined('DB_NAME')) {
+    define('DB_NAME', 'university_student_marketplace');
+}
+if (!defined('DB_USER')) {
+    define('DB_USER', 'root');
+}
+if (!defined('DB_PASS')) {
+    define('DB_PASS', '');
+}
+

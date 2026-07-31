@@ -2,10 +2,16 @@
 /**
  * Database Connection Wrapper
  * UniMarket - University Student Marketplace
+ *
+ * @package UniMarket\Database
  */
 
 require_once __DIR__ . '/config.php';
 
+/**
+ * Class Database
+ * Handles PDO database connection establishment using configuration constants.
+ */
 class Database
 {
     /**
@@ -18,6 +24,7 @@ class Database
     /**
      * Establish and return the PDO database connection.
      *
+     * @throws PDOException If the connection fails.
      * @return PDO
      */
     public function connect(): PDO
@@ -34,9 +41,9 @@ class Database
                 DB_USER,
                 DB_PASS,
                 [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                    PDO::ATTR_EMULATE_PREPARES => false,
+                    PDO::ATTR_EMULATE_PREPARES   => false,
                 ]
             );
         }
@@ -44,3 +51,4 @@ class Database
         return $this->connection;
     }
 }
+

@@ -2,6 +2,8 @@
 /**
  * User Logout Script
  * UniMarket - University Student Marketplace
+ *
+ * Safe session cleanup and cookie invalidation script.
  */
 
 // Start session if not already active
@@ -9,10 +11,10 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Remove all session variables
+// Clear all session variables
 $_SESSION = [];
 
-// Expire and remove session cookie if active
+// Expire and delete the session cookie if enabled
 if (ini_get('session.use_cookies')) {
     $params = session_get_cookie_params();
     setcookie(
@@ -26,10 +28,9 @@ if (ini_get('session.use_cookies')) {
     );
 }
 
-// Destroy server-side session
+// Destroy server-side session instance
 session_destroy();
 
-// Redirect to login page
+// Redirect user to the login page
 header('Location: login.php');
 exit();
-

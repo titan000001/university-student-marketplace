@@ -10,15 +10,21 @@ UniMarket addresses peer-to-peer commerce challenges on university campuses by e
 
 ---
 
-## Key Features Implemented (Week 5 / DP10)
+## Key Features Implemented
 
 - **Database Architecture**: Relational MySQL schema containing `users`, `categories`, `products`, and `transactions` tables.
 - **PDO Connection Wrapper**: Centralized `Database` class in `backend/config/database.php` providing secure PDO connections with UTF-8 character encoding and exception handling.
 - **Database Authentication**: Secure login system querying the `users` table, supporting password verification (`password_verify()`) and fallback for legacy plain-text comparisons.
 - **Session Management**: Session regeneration (`session_regenerate_id()`), storage of `user_id`, `full_name`, and `role` in `$_SESSION`.
 - **Dashboard Protection**: Guard checks on authenticated pages redirecting unauthorized visitors back to `login.php`.
-- **Dynamic Dashboard Display**: Logged-in user's full name is rendered securely with `htmlspecialchars()`.
+- **Dynamic Dashboard Display**: Logged-in user's full name, User ID, and Role rendered securely with `htmlspecialchars()`.
 - **Session Cleanup & Logout**: Complete session data unsetting, session cookie expiration, and server session destruction upon logout.
+- **Premium UI/UX Polish & Refactor**:
+  - **Academic Theme**: Palette built with Primary (`#2563EB`), Secondary (`#1E40AF`), Success (`#16A34A`), Danger (`#DC2626`), and Dark Navy (`#0F172A`).
+  - **Typography**: Google Font **Plus Jakarta Sans** and **Inter** stack for crisp SaaS typography.
+  - **Seamless Split-Screen Hero**: 2-column hero grid layout with text column, trust badges, and 3D illustration media card with floating glass stats badge.
+  - **Custom 3D Visual Assets**: High-resolution generated category headers (`cat-textbooks.png`, `cat-electronics.png`, `cat-dorm.png`, `cat-services.png`) and student profile avatar (`student-avatar.png`).
+  - **Bulletproof SVG Icon Engine**: Inline Lucide vector icons (`fill="none"`, `stroke="currentColor"`) with exact 16px, 20px, 24px, and 32px dimension scaling.
 
 ---
 
@@ -39,7 +45,14 @@ university-student-marketplace/
 ├── frontend/
 │   ├── css/
 │   │   ├── login.css           # Authentication form layout styles
-│   │   └── styles.css          # Site-wide base typography, header, and layout styles
+│   │   └── styles.css          # Design system, typography, split hero, grid styles
+│   ├── images/
+│   │   ├── cat-dorm.png        # Dorm essentials category header
+│   │   ├── cat-electronics.png # Electronics category header
+│   │   ├── cat-services.png    # Student services category header
+│   │   ├── cat-textbooks.png   # Textbooks category header
+│   │   ├── hero-marketplace.png# 3D Campus marketplace hero illustration
+│   │   └── student-avatar.png  # Student profile portrait avatar
 │   ├── js/
 │   │   └── app.js              # Frontend interactive logic (mobile nav, categories, stats)
 │   └── pages/
