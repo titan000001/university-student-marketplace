@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Registration Form Validation & Feedback Handling
     if (registrationForm) {
-        registrationForm.addEventListener("submit", (event) => {
+        registrationForm.addEventListener("submit", async (event) => {
             event.preventDefault();
 
             const fullName = document.querySelector("#full-name").value.trim();
@@ -150,16 +150,44 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // Success feedback
-            formMessage.textContent = "Registration Successful! Account created.";
-            formMessage.classList.add("success");
+            const submitBtn = registrationForm.querySelector('button[type="submit"]');
+            if (submitBtn) submitBtn.disabled = true;
 
-            console.log("Student Registration Data:", {
-                fullName,
-                email,
-                studentId,
-                department
-            });
+            formMessage.textContent = "Registering...";
+
+            try {
+                const response = await fetch("../../backend/api/register.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        full_name: fullName,
+                        email: email,
+                        student_id: studentId,
+                        department: department,
+                        password: password
+                    })
+                });
+
+                const result = await response.json();
+
+                formMessage.className = "";
+                if (response.ok && result.success) {
+                    formMessage.textContent = result.message || "Registration successful! Account created.";
+                    formMessage.classList.add("success");
+                    registrationForm.reset();
+                } else {
+                    formMessage.textContent = result.message || "Registration failed. Please try again.";
+                    formMessage.classList.add("error");
+                }
+            } catch (err) {
+                console.error("Registration error:", err);
+                formMessage.className = "error";
+                formMessage.textContent = "Unable to connect to server. Please try again.";
+            } finally {
+                if (submitBtn) submitBtn.disabled = false;
+            }
         });
     }
 });

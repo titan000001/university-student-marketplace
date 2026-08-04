@@ -345,6 +345,6 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="../js/app.js"></script>
+    <script src="../js/app.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
