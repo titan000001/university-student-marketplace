@@ -2,7 +2,7 @@
 /**
  * Student Profile Update API Endpoint
  * UniMarket - University Student Marketplace
- * Development Package: DP12-B
+ * Development Package: DP12-C (Integration & QA Refinement)
  */
 
 require_once __DIR__ . '/../config/database.php';
@@ -18,32 +18,35 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// 2. Accept POST requests only: reject non-POST requests
+// 2. Accept POST requests only: redirect non-POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: ../../frontend/pages/profile.php');
     exit();
 }
 
-// 3. Retrieve inputs using trim() - do not trust client-side data
+// 3. Retrieve inputs using trim()
 $fullName   = isset($_POST['full_name'])  ? trim((string) $_POST['full_name'])  : '';
 $department = isset($_POST['department']) ? trim((string) $_POST['department']) : '';
 
 // 4. Validate inputs (Full Name & Department)
+$validationError = '';
+
 if (empty($fullName) || empty($department)) {
-    $error = 'Both Full Name and Department are required fields.';
-    header('Location: ../../frontend/pages/profile.php?error=' . urlencode($error));
-    exit();
+    $validationError = 'Both Full Name and Department are required fields.';
+} elseif (strlen($fullName) < 2 || strlen($fullName) > 100) {
+    $validationError = 'Full Name must be between 2 and 100 characters in length.';
+} elseif (strlen($department) < 2 || strlen($department) > 100) {
+    $validationError = 'Department must be between 2 and 100 characters in length.';
 }
 
-if (strlen($fullName) < 2 || strlen($fullName) > 100) {
-    $error = 'Full Name must be between 2 and 100 characters in length.';
-    header('Location: ../../frontend/pages/profile.php?error=' . urlencode($error));
-    exit();
-}
-
-if (strlen($department) < 2 || strlen($department) > 100) {
-    $error = 'Department must be between 2 and 100 characters in length.';
-    header('Location: ../../frontend/pages/profile.php?error=' . urlencode($error));
+if (!empty($validationError)) {
+    // Preserve form draft so typed entries are not lost on validation failure
+    $_SESSION['profile_form_draft'] = [
+        'full_name'  => $fullName,
+        'department' => $department
+    ];
+    $_SESSION['flash_error'] = $validationError;
+    header('Location: ../../frontend/pages/profile.php');
     exit();
 }
 
@@ -51,11 +54,26 @@ if (strlen($department) < 2 || strlen($department) > 100) {
 $userId = (int) $_SESSION['user_id'];
 
 try {
-    // 6. Connect to database using existing Database class & PDO wrapper
+    // 6. Connect to database
     $database = new Database();
     $connection = $database->connect();
 
-    // 7. Prepared UPDATE statement targeting only full_name and department
+    // 7. Check current values to prevent unnecessary UPDATE operations
+    $checkStmt = $connection->prepare(
+        'SELECT full_name, department FROM users WHERE user_id = :user_id LIMIT 1'
+    );
+    $checkStmt->execute(['user_id' => $userId]);
+    $currentRecord = $checkStmt->fetch(PDO::FETCH_ASSOC);
+
+    if (is_array($currentRecord)) {
+        if ($currentRecord['full_name'] === $fullName && $currentRecord['department'] === $department) {
+            $_SESSION['flash_success'] = 'No changes were made to your profile.';
+            header('Location: ../../frontend/pages/profile.php');
+            exit();
+        }
+    }
+
+    // 8. Prepared UPDATE statement targeting only full_name and department
     $statement = $connection->prepare(
         'UPDATE users
          SET full_name = :full_name,
@@ -69,18 +87,17 @@ try {
         'user_id'    => $userId
     ]);
 
-    // 8. Update active session so dashboard immediately reflects the new name
+    // 9. Update active session state so dashboard immediately reflects new name
     $_SESSION['full_name'] = $fullName;
 
-    // 9. Redirect back to profile page with success notification
-    $success = 'Profile details updated successfully!';
-    header('Location: ../../frontend/pages/profile.php?success=' . urlencode($success));
+    // 10. Set single-use session flash success message and redirect
+    $_SESSION['flash_success'] = 'Profile details updated successfully!';
+    header('Location: ../../frontend/pages/profile.php');
     exit();
 
 } catch (PDOException $exception) {
-    // 10. Log PDO exception without exposing raw SQL/database details to user
     error_log('Profile Update Exception: ' . $exception->getMessage());
-    $error = 'A database error occurred while updating your profile. Please try again.';
-    header('Location: ../../frontend/pages/profile.php?error=' . urlencode($error));
+    $_SESSION['flash_error'] = 'A database error occurred while updating your profile. Please try again.';
+    header('Location: ../../frontend/pages/profile.php');
     exit();
 }
