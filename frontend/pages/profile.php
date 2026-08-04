@@ -2,7 +2,7 @@
 /**
  * Student Profile Page
  * UniMarket - University Student Marketplace
- * Development Package: DP12-A
+ * Development Package: DP12-C (Integration & QA Refinement)
  */
 
 require_once __DIR__ . '/../../backend/config/database.php';
@@ -52,9 +52,22 @@ try {
     $fetchError = 'Unable to retrieve user profile information due to a database error.';
 }
 
-// Success and error message placeholders (for display after update operations in DP12-B)
-$successMessage = isset($_GET['success']) ? trim((string) $_GET['success']) : '';
-$errorMessage   = isset($_GET['error'])   ? trim((string) $_GET['error'])   : '';
+// Preserve form draft values if returning from a validation error
+if (isset($_SESSION['profile_form_draft']) && is_array($_SESSION['profile_form_draft'])) {
+    if (isset($_SESSION['profile_form_draft']['full_name'])) {
+        $user['full_name'] = $_SESSION['profile_form_draft']['full_name'];
+    }
+    if (isset($_SESSION['profile_form_draft']['department'])) {
+        $user['department'] = $_SESSION['profile_form_draft']['department'];
+    }
+    unset($_SESSION['profile_form_draft']);
+}
+
+// Single-use session flash messages (fallback to GET params for backwards compatibility)
+$successMessage = isset($_SESSION['flash_success']) ? trim((string) $_SESSION['flash_success']) : (isset($_GET['success']) ? trim((string) $_GET['success']) : '');
+$errorMessage   = isset($_SESSION['flash_error'])   ? trim((string) $_SESSION['flash_error'])   : (isset($_GET['error'])   ? trim((string) $_GET['error'])   : '');
+
+unset($_SESSION['flash_success'], $_SESSION['flash_error']);
 
 if (!$userRecordFound && empty($errorMessage)) {
     $errorMessage = $fetchError;
