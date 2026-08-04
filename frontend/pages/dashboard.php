@@ -83,6 +83,12 @@ $userRole = htmlspecialchars((string) ($_SESSION['role'] ?? 'Student'), ENT_QUOT
                     </a>
                 </li>
                 <li>
+                    <a href="profile.php">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        My Profile
+                    </a>
+                </li>
+                <li>
                     <a href="index.php#categories">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                         Browse Marketplace
@@ -158,7 +164,11 @@ $userRole = htmlspecialchars((string) ($_SESSION['role'] ?? 'Student'), ENT_QUOT
                 </h2>
                 <p style="color: var(--gray-600); margin-bottom: 1rem;">Choose an action below to get started on UniMarket.</p>
                 <div class="dashboard-actions">
-                    <a href="index.php#categories" class="btn-primary">
+                    <a href="profile.php" class="btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        My Profile
+                    </a>
+                    <a href="index.php#categories" class="btn-outline">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                         Explore Marketplace
                     </a>
