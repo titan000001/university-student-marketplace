@@ -14,14 +14,14 @@ $fullName   = $isLoggedIn ? htmlspecialchars((string) ($_SESSION['full_name'] ??
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="UniMarket - A campus-exclusive marketplace for university students to safely buy, sell, and trade textbooks, electronics, and dorm essentials.">
     <title>UniMarket | University Student Marketplace</title>
-    
+
     <!-- Google Fonts: Plus Jakarta Sans & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/styles.css?v=<?php echo time(); ?>">
 </head>
 <body>
 
@@ -80,7 +80,7 @@ $fullName   = $isLoggedIn ? htmlspecialchars((string) ($_SESSION['full_name'] ??
                     </a>
                 </li>
                 <li>
-                    <a href="#marketplace">
+                    <a href="marketplace.php">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                         Marketplace
                     </a>
@@ -140,11 +140,11 @@ $fullName   = $isLoggedIn ? htmlspecialchars((string) ($_SESSION['full_name'] ??
                     </div>
 
                     <div class="hero-cta-group">
-                        <a href="#categories" class="btn-primary btn-hero">
+                        <a href="marketplace.php" class="btn-primary btn-hero">
                             Explore Marketplace
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                         </a>
-                        <a href="login.php" class="btn-outline btn-hero-outline">
+                        <a href="<?php echo $isLoggedIn ? 'create_product.php' : 'login.php'; ?>" class="btn-outline btn-hero-outline">
                             Post Your Item
                         </a>
                     </div>

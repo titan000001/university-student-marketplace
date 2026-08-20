@@ -35,7 +35,7 @@ $userRole = htmlspecialchars((string) ($_SESSION['role'] ?? 'Student'), ENT_QUOT
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/styles.css?v=<?php echo time(); ?>">
 </head>
 <body>
 
@@ -83,13 +83,19 @@ $userRole = htmlspecialchars((string) ($_SESSION['role'] ?? 'Student'), ENT_QUOT
                     </a>
                 </li>
                 <li>
+                    <a href="create_product.php">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Post New Item
+                    </a>
+                </li>
+                <li>
                     <a href="profile.php">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                         My Profile
                     </a>
                 </li>
                 <li>
-                    <a href="index.php#categories">
+                    <a href="marketplace.php">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                         Browse Marketplace
                     </a>
@@ -107,6 +113,18 @@ $userRole = htmlspecialchars((string) ($_SESSION['role'] ?? 'Student'), ENT_QUOT
     <!-- Dashboard Content -->
     <main class="main-content">
         <div class="dashboard-container">
+            <?php if (isset($_SESSION['flash_success'])) : ?>
+                <div class="dashboard-card" style="border-left: 4px solid var(--success); background-color: rgba(22, 163, 74, 0.05); margin-bottom: 1.5rem;">
+                    <p style="color: var(--success); font-weight: 600; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                        <?php
+                            echo htmlspecialchars((string)$_SESSION['flash_success'], ENT_QUOTES, 'UTF-8');
+                            unset($_SESSION['flash_success']);
+                        ?>
+                    </p>
+                </div>
+            <?php endif; ?>
+
             <!-- Welcome Header Banner with Student Avatar -->
             <section class="dashboard-header">
                 <div class="dashboard-avatar-wrapper">
@@ -164,11 +182,15 @@ $userRole = htmlspecialchars((string) ($_SESSION['role'] ?? 'Student'), ENT_QUOT
                 </h2>
                 <p style="color: var(--gray-600); margin-bottom: 1rem;">Choose an action below to get started on UniMarket.</p>
                 <div class="dashboard-actions">
-                    <a href="profile.php" class="btn-primary">
+                    <a href="create_product.php" class="btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Post Item for Sale
+                    </a>
+                    <a href="profile.php" class="btn-outline">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                         My Profile
                     </a>
-                    <a href="index.php#categories" class="btn-outline">
+                    <a href="marketplace.php" class="btn-outline">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                         Explore Marketplace
                     </a>
@@ -190,6 +212,6 @@ $userRole = htmlspecialchars((string) ($_SESSION['role'] ?? 'Student'), ENT_QUOT
     </footer>
 
     <!-- Scripts -->
-    <script src="../js/app.js"></script>
+    <script src="../js/app.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>

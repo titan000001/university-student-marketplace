@@ -18,24 +18,28 @@ document.addEventListener("DOMContentLoaded", () => {
     // Data Models with Generated Image Assets & Explicit SVG Attributes
     const categories = [
         {
+            id: 1,
             title: "Textbooks & Guides",
             description: "Buy and sell course books, lab manuals, and exam prep guides.",
             image: "../images/cat-textbooks.png",
             icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15z"/></svg>`
         },
         {
+            id: 2,
             title: "Student Electronics",
             description: "Laptops, smartphones, graphing calculators, and accessories.",
             image: "../images/cat-electronics.png",
             icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><path d="M20 16V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v12m16 0H4m16 0a2 2 0 0 1 2 2v1H2v-1a2 2 0 0 1 2-2"/></svg>`
         },
         {
+            id: 3,
             title: "Dorm Essentials",
             description: "Desk lamps, chairs, mini storage, and room decor.",
             image: "../images/cat-dorm.png",
             icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`
         },
         {
+            id: 4,
             title: "Campus Services",
             description: "Peer tutoring, lab assistance, printing, and study support.",
             image: "../images/cat-services.png",
@@ -80,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="category-content">
                     <h3>${category.icon} ${category.title}</h3>
                     <p>${category.description}</p>
-                    <a href="login.php" class="category-link">
+                    <a href="marketplace.php?category_id=${category.id}" class="category-link">
                         Browse Listings
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                     </a>

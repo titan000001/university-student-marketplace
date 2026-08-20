@@ -94,7 +94,7 @@ $departmentEscaped = htmlspecialchars((string) ($user['department'] ?? ''), ENT_
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/styles.css?v=<?php echo time(); ?>">
 </head>
 <body>
 
@@ -148,7 +148,7 @@ $departmentEscaped = htmlspecialchars((string) ($user['department'] ?? ''), ENT_
                     </a>
                 </li>
                 <li>
-                    <a href="index.php#categories">
+                    <a href="marketplace.php">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                         Browse Marketplace
                     </a>
@@ -166,7 +166,7 @@ $departmentEscaped = htmlspecialchars((string) ($user['department'] ?? ''), ENT_
     <!-- Main Content -->
     <main class="main-content">
         <div class="dashboard-container">
-            
+
             <!-- Page Header Banner -->
             <section class="dashboard-header">
                 <div class="dashboard-avatar-wrapper">
@@ -205,7 +205,7 @@ $departmentEscaped = htmlspecialchars((string) ($user['department'] ?? ''), ENT_
                 </h2>
 
                 <form method="POST" action="../../backend/api/update_profile.php" class="registration-form" style="max-width: 100%; margin: 1.5rem 0 0 0;" novalidate>
-                    
+
                     <!-- Editable Field: Full Name -->
                     <div class="form-group">
                         <label for="full_name">Full Name (Editable)</label>
@@ -289,6 +289,6 @@ $departmentEscaped = htmlspecialchars((string) ($user['department'] ?? ''), ENT_
     </footer>
 
     <!-- Scripts -->
-    <script src="../js/app.js"></script>
+    <script src="../js/app.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
