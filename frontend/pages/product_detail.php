@@ -2,7 +2,7 @@
 /**
  * Product Details Page
  * UniMarket - University Student Marketplace
- * Development Package: DP13-B
+ * Development Package: DP13-B / DP15
  */
 
 require_once __DIR__ . '/../../backend/config/database.php';
@@ -13,7 +13,13 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 $isLoggedIn = isset($_SESSION['user_id']);
+$userId     = $isLoggedIn ? (int)$_SESSION['user_id'] : 0;
 $fullName   = $isLoggedIn ? htmlspecialchars((string) ($_SESSION['full_name'] ?? 'Student'), ENT_QUOTES, 'UTF-8') : '';
+
+// Single-use session flash messages
+$successMessage = isset($_SESSION['flash_success']) ? trim((string) $_SESSION['flash_success']) : '';
+$errorMessage   = isset($_SESSION['flash_error'])   ? trim((string) $_SESSION['flash_error'])   : '';
+unset($_SESSION['flash_success'], $_SESSION['flash_error']);
 
 // 1. Extract and validate product ID from query parameter safely
 $productIdRaw = $_GET['id'] ?? '';
@@ -29,10 +35,10 @@ if ($productId > 0) {
 
         // 2. Fetch single product details with category and seller information using prepared statement
         $stmt = $connection->prepare(
-            'SELECT p.product_id, p.title, p.description, p.price, p.tags, p.image_url,
+            'SELECT p.product_id, p.seller_id, p.title, p.description, p.price, p.tags, p.image_url,
                     p.product_condition, p.status, p.created_at,
                     c.category_id, c.category_name,
-                    u.full_name AS seller_name, u.department AS seller_department
+                    u.full_name AS seller_name, u.department AS seller_department, u.email AS seller_email
              FROM products p
              JOIN categories c ON p.category_id = c.category_id
              JOIN users u ON p.seller_id = u.user_id
@@ -143,8 +149,20 @@ if ($productId > 0) {
                 <?php if ($isLoggedIn) : ?>
                     <li>
                         <a href="dashboard.php">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                             Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="my_orders.php">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                            My Reservations
+                        </a>
+                    </li>
+                    <li>
+                        <a href="my_listings.php">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                            My Listings
                         </a>
                     </li>
                 <?php endif; ?>
@@ -171,6 +189,25 @@ if ($productId > 0) {
                 <?php endif; ?>
             </nav>
 
+            <!-- Feedback Alerts -->
+            <?php if (!empty($successMessage)) : ?>
+                <div class="dashboard-card" style="border-left: 4px solid var(--success); background-color: rgba(22, 163, 74, 0.05); margin-bottom: 1.5rem;">
+                    <p style="color: var(--success); font-weight: 600; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                        <?php echo htmlspecialchars($successMessage, ENT_QUOTES, 'UTF-8'); ?>
+                    </p>
+                </div>
+            <?php endif; ?>
+
+            <?php if (!empty($errorMessage)) : ?>
+                <div class="dashboard-card" style="border-left: 4px solid var(--danger); background-color: rgba(220, 38, 38, 0.05); margin-bottom: 1.5rem;">
+                    <p style="color: var(--danger); font-weight: 600; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        <?php echo htmlspecialchars($errorMessage, ENT_QUOTES, 'UTF-8'); ?>
+                    </p>
+                </div>
+            <?php endif; ?>
+
             <?php if (!empty($fetchError)) : ?>
                 <div class="dashboard-card" style="border-left: 4px solid var(--danger); background-color: var(--danger-light); margin-bottom: 2rem;">
                     <p style="color: var(--danger); font-weight: 600; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
@@ -181,6 +218,8 @@ if ($productId > 0) {
             <?php endif; ?>
 
             <?php if ($product) :
+                $pId          = (int) $product['product_id'];
+                $pSellerId    = (int) $product['seller_id'];
                 $pTitle       = htmlspecialchars((string) $product['title'], ENT_QUOTES, 'UTF-8');
                 $pDesc        = !empty($product['description']) ? htmlspecialchars((string) $product['description'], ENT_QUOTES, 'UTF-8') : 'No description provided by seller.';
                 $pPrice       = number_format((float) $product['price'], 2);
@@ -190,8 +229,12 @@ if ($productId > 0) {
                 $pStatus      = htmlspecialchars((string) $product['status'], ENT_QUOTES, 'UTF-8');
                 $pSellerName  = htmlspecialchars((string) $product['seller_name'], ENT_QUOTES, 'UTF-8');
                 $pSellerDept  = htmlspecialchars((string) $product['seller_department'], ENT_QUOTES, 'UTF-8');
+                $pSellerEmail = htmlspecialchars((string) ($product['seller_email'] ?? ''), ENT_QUOTES, 'UTF-8');
                 $pCreatedAt   = date('F j, Y', strtotime((string) $product['created_at']));
                 $pImg         = !empty($product['image_url']) ? htmlspecialchars((string) $product['image_url'], ENT_QUOTES, 'UTF-8') : '../images/cat-textbooks.png';
+
+                $isAvailable  = ($product['status'] === 'Available' || $product['status'] === 'Active');
+                $isOwner      = ($isLoggedIn && $userId === $pSellerId);
 
                 if (!str_starts_with($pImg, 'http') && !str_starts_with($pImg, '../')) {
                     $pImg = '../' . ltrim($pImg, '/');
@@ -219,7 +262,7 @@ if ($productId > 0) {
                             </div>
                         </div>
 
-                        <!-- Right Column: Product Metadata & Seller Box -->
+                        <!-- Right Column: Product Metadata, Action Card, & Seller Box -->
                         <div class="product-info-col">
 
                             <div class="product-meta-header">
@@ -276,6 +319,90 @@ if ($productId > 0) {
                                 <?php endif; ?>
                             </div>
 
+                            <!-- Interactive Reservation Action Area -->
+                            <div class="reservation-card" style="background-color: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 1.5rem; margin-top: 1.5rem;">
+                                <?php if (!$isLoggedIn) : ?>
+                                    <h3 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1.15rem; color: var(--dark);">Reserve this Item</h3>
+                                    <p style="color: var(--gray-600); font-size: 0.9rem; margin-bottom: 1rem;">Sign in with your verified campus student account to reserve this item for safe on-campus pickup.</p>
+                                    <a href="login.php" class="btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; width: 100%;">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13 12H3"/></svg>
+                                        Sign In to Reserve
+                                    </a>
+
+                                <?php elseif ($isOwner) : ?>
+                                    <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--primary);">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                        <div>
+                                            <strong style="display: block; font-size: 0.95rem;">You are the seller of this listing</strong>
+                                            <span style="font-size: 0.85rem; color: var(--gray-600);">You can update details, change pricing, or adjust status in your listings.</span>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap;">
+                                        <a href="edit_product.php?id=<?php echo $pId; ?>" class="btn-outline" style="flex: 1; text-align: center;">Edit Listing</a>
+                                        <a href="my_listings.php" class="btn-primary" style="flex: 1; text-align: center;">My Listings</a>
+                                    </div>
+
+                                <?php elseif ($isAvailable) : ?>
+                                    <h3 style="margin-top: 0; margin-bottom: 0.35rem; font-size: 1.15rem; color: var(--dark);">Reserve for Campus Pickup</h3>
+                                    <p style="color: var(--gray-600); font-size: 0.85rem; margin-bottom: 1.25rem;">
+                                        Zero upfront fees. Choose a verified campus spot to inspect and pay cash upon meetup.
+                                    </p>
+
+                                    <form method="POST" action="../../backend/api/reserve_product.php" class="reserve-form">
+                                        <input type="hidden" name="product_id" value="<?php echo $pId; ?>">
+
+                                        <div class="form-group" style="margin-bottom: 1rem;">
+                                            <label for="meetup_spot" style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem; color: var(--dark);">
+                                                Select Campus Meetup Spot <span style="color: var(--danger);">*</span>
+                                            </label>
+                                            <select id="meetup_spot" name="meetup_spot" required onchange="updateMeetupCoordinates(this)" style="width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--gray-300); border-radius: var(--radius-sm); font-family: var(--font-main); font-size: 0.9rem; background-color: var(--white);">
+                                                <option value="23.77717600,90.39945200" selected>📍 Central Library Lobby (Recommended Safe Spot)</option>
+                                                <option value="23.73350000,90.39290000">📍 Student Activity Center (TSC)</option>
+                                                <option value="23.77750000,90.40010000">📍 Campus Cafeteria Entrance</option>
+                                                <option value="23.77800000,90.39900000">📍 Academic Building 1 (Ground Floor)</option>
+                                                <option value="23.77650000,90.39800000">📍 University Main Gate Security Post</option>
+                                            </select>
+                                        </div>
+
+                                        <input type="hidden" id="meetup_latitude" name="meetup_latitude" value="23.77717600">
+                                        <input type="hidden" id="meetup_longitude" name="meetup_longitude" value="90.39945200">
+
+                                        <button type="submit" class="btn-primary" style="width: 100%; display: flex; justify-content: center; align-items: center; gap: 0.5rem; padding: 0.85rem;">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                                            Confirm Item Reservation ($<?php echo $pPrice; ?>)
+                                        </button>
+                                    </form>
+
+                                    <script>
+                                        function updateMeetupCoordinates(selectEl) {
+                                            const parts = selectEl.value.split(',');
+                                            if (parts.length === 2) {
+                                                document.getElementById('meetup_latitude').value = parts[0];
+                                                document.getElementById('meetup_longitude').value = parts[1];
+                                            }
+                                        }
+                                    </script>
+
+                                <?php elseif ($pStatus === 'Reserved') : ?>
+                                    <div style="display: flex; align-items: center; gap: 0.75rem; color: #b45309;">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                        <div>
+                                            <strong style="display: block; font-size: 0.95rem;">Currently Reserved</strong>
+                                            <span style="font-size: 0.85rem; color: var(--gray-600);">A student has reserved this item and a campus meetup is in progress.</span>
+                                        </div>
+                                    </div>
+
+                                <?php else : ?>
+                                    <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--gray-600);">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                        <div>
+                                            <strong style="display: block; font-size: 0.95rem;">Listing Sold</strong>
+                                            <span style="font-size: 0.85rem;">This item has already been purchased and exchanged on campus.</span>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+
                             <!-- Seller Information Card -->
                             <div class="seller-info-card">
                                 <div class="seller-header">
@@ -285,6 +412,13 @@ if ($productId > 0) {
                                     <div class="seller-details">
                                         <h4>Seller: <?php echo $pSellerName; ?></h4>
                                         <p>Department of <?php echo $pSellerDept; ?> • Verified Student</p>
+                                        <?php if (!empty($pSellerEmail) && $isLoggedIn) : ?>
+                                            <p style="margin-top: 0.35rem;">
+                                                <a href="mailto:<?php echo $pSellerEmail; ?>?subject=Inquiry%20regarding%20<?php echo rawurlencode($product['title']); ?>" style="color: var(--primary); font-weight: 600; text-decoration: none;">
+                                                    ✉️ Contact Seller via Campus Email
+                                                </a>
+                                            </p>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>

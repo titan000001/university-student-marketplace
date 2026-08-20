@@ -1328,6 +1328,18 @@ svg.svg-icon-xl, .svg-icon-xl {
     border: 1px solid rgba(217, 119, 6, 0.3);
 }
 
+.status-completed {
+    background-color: var(--success-light);
+    color: var(--success);
+    border: 1px solid rgba(22, 163, 74, 0.3);
+}
+
+.status-cancelled {
+    background-color: var(--danger-light);
+    color: var(--danger);
+    border: 1px solid rgba(220, 38, 38, 0.3);
+}
+
 .status-sold {
     background-color: var(--gray-200);
     color: var(--gray-600);
@@ -1569,6 +1581,205 @@ svg.svg-icon-xl, .svg-icon-xl {
 }
 
 /* ==========================================================================
+   My Listings Management Grid & Cards
+   ========================================================================== */
+.my-listings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.my-listing-card {
+    background-color: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.my-listing-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.my-listing-img-box {
+    position: relative;
+    height: 180px;
+    background-color: var(--gray-100);
+    overflow: hidden;
+}
+
+.my-listing-img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.my-listing-img-box .status-badge {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.my-listing-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 0.75rem;
+}
+
+.my-listing-meta {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.my-listing-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.35;
+    margin: 0;
+}
+
+.my-listing-title a {
+    color: var(--dark);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.my-listing-title a:hover {
+    color: var(--primary);
+}
+
+.my-listing-price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.my-listing-price {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.my-listing-price span {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--gray-600);
+}
+
+.my-listing-date {
+    font-size: 0.8rem;
+    color: var(--gray-600);
+}
+
+.status-update-form {
+    margin: 0;
+    padding: 0.5rem 0;
+}
+
+.status-control-group {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.status-select {
+    flex: 1;
+    padding: 0.45rem 0.75rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-family: var(--font-main);
+    background-color: var(--white);
+    color: var(--dark);
+    font-weight: 600;
+}
+
+.btn-status-save {
+    padding: 0.45rem 0.75rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-sm);
+    background-color: var(--gray-100);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-status-save:hover {
+    background-color: var(--gray-200);
+}
+
+.my-listing-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+}
+
+.btn-action-edit {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--primary);
+    border-radius: var(--radius-md);
+    color: var(--primary);
+    background-color: var(--white);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+}
+
+.btn-action-edit:hover {
+    background-color: var(--primary);
+    color: var(--white);
+}
+
+.btn-action-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.6rem 0.85rem;
+    border: 1px solid var(--danger);
+    border-radius: var(--radius-md);
+    color: var(--danger);
+    background-color: var(--white);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-action-delete:hover {
+    background-color: var(--danger);
+    color: var(--white);
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* ==========================================================================
    Responsive Layout & Media Queries
    ========================================================================== */
 @media (max-width: 900px) {
@@ -1643,5 +1854,9 @@ svg.svg-icon-xl, .svg-icon-xl {
     .filter-actions-group button, .filter-actions-group a {
         flex: 1;
         text-align: center;
+    }
+
+    .my-listings-grid {
+        grid-template-columns: 1fr;
     }
 }

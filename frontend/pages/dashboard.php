@@ -4,6 +4,8 @@
  * UniMarket - University Student Marketplace
  */
 
+require_once __DIR__ . '/../../backend/config/database.php';
+
 // Start session if not already active
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -17,8 +19,26 @@ if (!isset($_SESSION['user_id'])) {
 
 // Retrieve and escape logged-in user's details from session
 $fullName = htmlspecialchars((string) ($_SESSION['full_name'] ?? 'User'), ENT_QUOTES, 'UTF-8');
-$userId   = htmlspecialchars((string) ($_SESSION['user_id'] ?? 'N/A'), ENT_QUOTES, 'UTF-8');
+$userId   = (int) ($_SESSION['user_id'] ?? 0);
 $userRole = htmlspecialchars((string) ($_SESSION['role'] ?? 'Student'), ENT_QUOTES, 'UTF-8');
+
+// Query dynamic seller listings count & buyer reservations count
+$myListingsCount = 0;
+$myOrdersCount   = 0;
+try {
+    $database = new Database();
+    $connection = $database->connect();
+
+    $countStmt = $connection->prepare('SELECT COUNT(*) FROM products WHERE seller_id = :user_id');
+    $countStmt->execute(['user_id' => $userId]);
+    $myListingsCount = (int) $countStmt->fetchColumn();
+
+    $ordersStmt = $connection->prepare('SELECT COUNT(*) FROM transactions WHERE buyer_id = :user_id');
+    $ordersStmt->execute(['user_id' => $userId]);
+    $myOrdersCount = (int) $ordersStmt->fetchColumn();
+} catch (PDOException $exception) {
+    error_log('Dashboard Counts Error: ' . $exception->getMessage());
+}
 ?>
 
 <!DOCTYPE html>
@@ -83,6 +103,18 @@ $userRole = htmlspecialchars((string) ($_SESSION['role'] ?? 'Student'), ENT_QUOT
                     </a>
                 </li>
                 <li>
+                    <a href="my_orders.php">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                        My Reservations (<?php echo $myOrdersCount; ?>)
+                    </a>
+                </li>
+                <li>
+                    <a href="my_listings.php">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                        My Listings (<?php echo $myListingsCount; ?>)
+                    </a>
+                </li>
+                <li>
                     <a href="create_product.php">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                         Post New Item
@@ -125,6 +157,18 @@ $userRole = htmlspecialchars((string) ($_SESSION['role'] ?? 'Student'), ENT_QUOT
                 </div>
             <?php endif; ?>
 
+            <?php if (isset($_SESSION['flash_error'])) : ?>
+                <div class="dashboard-card" style="border-left: 4px solid var(--danger); background-color: rgba(220, 38, 38, 0.05); margin-bottom: 1.5rem;">
+                    <p style="color: var(--danger); font-weight: 600; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        <?php
+                            echo htmlspecialchars((string)$_SESSION['flash_error'], ENT_QUOTES, 'UTF-8');
+                            unset($_SESSION['flash_error']);
+                        ?>
+                    </p>
+                </div>
+            <?php endif; ?>
+
             <!-- Welcome Header Banner with Student Avatar -->
             <section class="dashboard-header">
                 <div class="dashboard-avatar-wrapper">
@@ -132,7 +176,7 @@ $userRole = htmlspecialchars((string) ($_SESSION['role'] ?? 'Student'), ENT_QUOT
                 </div>
                 <div class="dashboard-welcome-text">
                     <h1>Welcome back, <?php echo $fullName; ?>!</h1>
-                    <p>Manage your campus marketplace account and active student session.</p>
+                    <p>Manage your campus marketplace account, listed products, reservations, and active student session.</p>
                 </div>
             </section>
 
@@ -159,17 +203,25 @@ $userRole = htmlspecialchars((string) ($_SESSION['role'] ?? 'Student'), ENT_QUOT
                     </div>
                     <div class="info-item">
                         <div class="info-label">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                            Account Role
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                            My Listings
                         </div>
-                        <div class="info-value"><?php echo ucfirst($userRole); ?></div>
+                        <div class="info-value">
+                            <a href="my_listings.php" style="color: var(--primary); text-decoration: none; font-weight: 700;">
+                                <?php echo $myListingsCount; ?> Item<?php echo $myListingsCount === 1 ? '' : 's'; ?> Listed →
+                            </a>
+                        </div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            Session Status
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                            My Reservations
                         </div>
-                        <div class="info-value" style="color: var(--success);">● Active Session</div>
+                        <div class="info-value">
+                            <a href="my_orders.php" style="color: var(--secondary); text-decoration: none; font-weight: 700;">
+                                <?php echo $myOrdersCount; ?> Reservation<?php echo $myOrdersCount === 1 ? '' : 's'; ?> →
+                            </a>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -180,19 +232,27 @@ $userRole = htmlspecialchars((string) ($_SESSION['role'] ?? 'Student'), ENT_QUOT
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon" style="color: var(--secondary);"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                     Quick Actions
                 </h2>
-                <p style="color: var(--gray-600); margin-bottom: 1rem;">Choose an action below to get started on UniMarket.</p>
+                <p style="color: var(--gray-600); margin-bottom: 1rem;">Choose an action below to manage your marketplace presence.</p>
                 <div class="dashboard-actions">
-                    <a href="create_product.php" class="btn-primary">
+                    <a href="my_orders.php" class="btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                        My Reservations (<?php echo $myOrdersCount; ?>)
+                    </a>
+                    <a href="my_listings.php" class="btn-outline">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                        My Listings (<?php echo $myListingsCount; ?>)
+                    </a>
+                    <a href="create_product.php" class="btn-outline">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                         Post Item for Sale
-                    </a>
-                    <a href="profile.php" class="btn-outline">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                        My Profile
                     </a>
                     <a href="marketplace.php" class="btn-outline">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                         Explore Marketplace
+                    </a>
+                    <a href="profile.php" class="btn-outline">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        My Profile
                     </a>
                     <a href="logout.php" class="btn-outline" style="border-color: var(--danger); color: var(--danger);">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
