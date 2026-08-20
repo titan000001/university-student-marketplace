@@ -23,19 +23,35 @@ $userId   = (int) ($_SESSION['user_id'] ?? 0);
 $userRole = htmlspecialchars((string) ($_SESSION['role'] ?? 'Student'), ENT_QUOTES, 'UTF-8');
 
 // Query dynamic seller listings count & buyer reservations count
-$myListingsCount = 0;
-$myOrdersCount   = 0;
+$myListingsCount     = 0;
+$activeListingsCount = 0;
+$myOrdersCount       = 0;
+$completedDealsCount = 0;
+
 try {
     $database = new Database();
     $connection = $database->connect();
 
+    // Total seller listings
     $countStmt = $connection->prepare('SELECT COUNT(*) FROM products WHERE seller_id = :user_id');
     $countStmt->execute(['user_id' => $userId]);
     $myListingsCount = (int) $countStmt->fetchColumn();
 
-    $ordersStmt = $connection->prepare('SELECT COUNT(*) FROM transactions WHERE buyer_id = :user_id');
+    // Active marketplace listings
+    $activeStmt = $connection->prepare('SELECT COUNT(*) FROM products WHERE seller_id = :user_id AND status IN ("Available", "Active")');
+    $activeStmt->execute(['user_id' => $userId]);
+    $activeListingsCount = (int) $activeStmt->fetchColumn();
+
+    // Active buyer reservations
+    $ordersStmt = $connection->prepare('SELECT COUNT(*) FROM transactions WHERE buyer_id = :user_id AND status = "Reserved"');
     $ordersStmt->execute(['user_id' => $userId]);
     $myOrdersCount = (int) $ordersStmt->fetchColumn();
+
+    // Completed campus exchanges
+    $compStmt = $connection->prepare('SELECT COUNT(*) FROM transactions WHERE (seller_id = :user_id OR buyer_id = :user_id) AND status = "Completed"');
+    $compStmt->execute(['user_id' => $userId]);
+    $completedDealsCount = (int) $compStmt->fetchColumn();
+
 } catch (PDOException $exception) {
     error_log('Dashboard Counts Error: ' . $exception->getMessage());
 }
@@ -180,11 +196,11 @@ try {
                 </div>
             </section>
 
-            <!-- Account Details Card -->
+            <!-- Account Details & Metrics Card -->
             <section class="dashboard-card">
                 <h2>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon" style="color: var(--primary);"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                    Account Overview
+                    Marketplace & Account Overview
                 </h2>
                 <div class="user-info-grid">
                     <div class="info-item">
@@ -204,24 +220,40 @@ try {
                     <div class="info-item">
                         <div class="info-label">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                            My Listings
+                            Active Listings
                         </div>
                         <div class="info-value">
                             <a href="my_listings.php" style="color: var(--primary); text-decoration: none; font-weight: 700;">
-                                <?php echo $myListingsCount; ?> Item<?php echo $myListingsCount === 1 ? '' : 's'; ?> Listed →
+                                <?php echo $activeListingsCount; ?> of <?php echo $myListingsCount; ?> Active →
                             </a>
                         </div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                            My Reservations
+                            Pending Reservations
                         </div>
                         <div class="info-value">
                             <a href="my_orders.php" style="color: var(--secondary); text-decoration: none; font-weight: 700;">
-                                <?php echo $myOrdersCount; ?> Reservation<?php echo $myOrdersCount === 1 ? '' : 's'; ?> →
+                                <?php echo $myOrdersCount; ?> Pending →
                             </a>
                         </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><polyline points="20 6 9 17 4 12"/></svg>
+                            Completed Exchanges
+                        </div>
+                        <div class="info-value" style="color: var(--success); font-weight: 700;">
+                            <?php echo $completedDealsCount; ?> Deal<?php echo $completedDealsCount === 1 ? '' : 's'; ?>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            Session Status
+                        </div>
+                        <div class="info-value" style="color: var(--success);">● Active Session</div>
                     </div>
                 </div>
             </section>

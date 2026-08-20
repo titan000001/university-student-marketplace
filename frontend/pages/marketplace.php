@@ -15,10 +15,34 @@ if (session_status() === PHP_SESSION_NONE) {
 $isLoggedIn = isset($_SESSION['user_id']);
 $fullName   = $isLoggedIn ? htmlspecialchars((string) ($_SESSION['full_name'] ?? 'Student'), ENT_QUOTES, 'UTF-8') : '';
 
-// 1. Extract search & filter parameters safely
+// 1. Extract search, category, price range & sort parameters safely
 $searchQuery   = isset($_GET['search']) ? trim((string) $_GET['search']) : '';
 $categoryIdRaw = isset($_GET['category_id']) ? trim((string) $_GET['category_id']) : '';
 $categoryId    = (is_numeric($categoryIdRaw) && (int) $categoryIdRaw > 0) ? (int) $categoryIdRaw : 0;
+
+$minPriceRaw   = isset($_GET['min_price']) ? trim((string) $_GET['min_price']) : '';
+$maxPriceRaw   = isset($_GET['max_price']) ? trim((string) $_GET['max_price']) : '';
+$minPrice      = ($minPriceRaw !== '' && is_numeric($minPriceRaw) && (float) $minPriceRaw >= 0) ? (float) $minPriceRaw : null;
+$maxPrice      = ($maxPriceRaw !== '' && is_numeric($maxPriceRaw) && (float) $maxPriceRaw >= 0) ? (float) $maxPriceRaw : null;
+
+// Normalize price bounds if inverted
+if ($minPrice !== null && $maxPrice !== null && $minPrice > $maxPrice) {
+    $temp = $minPrice;
+    $minPrice = $maxPrice;
+    $maxPrice = $temp;
+}
+
+// Server-side sort whitelist
+$sortOption    = isset($_GET['sort']) ? trim((string) $_GET['sort']) : 'newest';
+$sortWhitelist = [
+    'newest'     => 'p.created_at DESC',
+    'price_asc'  => 'p.price ASC',
+    'price_desc' => 'p.price DESC'
+];
+$orderBy = $sortWhitelist[$sortOption] ?? 'p.created_at DESC';
+if (!array_key_exists($sortOption, $sortWhitelist)) {
+    $sortOption = 'newest';
+}
 
 $categories      = [];
 $products        = [];
@@ -67,7 +91,17 @@ try {
         $params['category_id'] = $categoryId;
     }
 
-    $sql .= ' ORDER BY p.created_at DESC';
+    if ($minPrice !== null) {
+        $sql .= ' AND p.price >= :min_price';
+        $params['min_price'] = $minPrice;
+    }
+
+    if ($maxPrice !== null) {
+        $sql .= ' AND p.price <= :max_price';
+        $params['max_price'] = $maxPrice;
+    }
+
+    $sql .= ' ORDER BY ' . $orderBy;
 
     $productStmt = $connection->prepare($sql);
     $productStmt->execute($params);
@@ -208,7 +242,7 @@ try {
                 </div>
             </div>
 
-            <!-- Search & Filter Controls -->
+            <!-- Search, Filter & Sort Controls -->
             <section class="marketplace-filter-card">
                 <form method="GET" action="marketplace.php" class="filter-bar-form">
 
@@ -218,12 +252,12 @@ try {
                             type="text"
                             name="search"
                             id="search"
-                            placeholder="Search by title or keywords (e.g. Java, Calculator)..."
+                            placeholder="Search by title or keywords (e.g. Java, Physics)..."
                             value="<?php echo htmlspecialchars($searchQuery, ENT_QUOTES, 'UTF-8'); ?>">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon input-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                     </div>
 
-                    <!-- Dynamic Category Select Dropdown -->
+                    <!-- Category Select Dropdown -->
                     <div class="category-select-wrapper input-icon-group">
                         <select name="category_id" id="category_id" class="filter-select">
                             <option value="0">All Categories</option>
@@ -238,14 +272,45 @@ try {
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon input-icon"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                     </div>
 
+                    <!-- Price Range Inputs -->
+                    <div style="display: flex; gap: 0.5rem; flex: 1; min-width: 180px;">
+                        <input
+                            type="number"
+                            name="min_price"
+                            id="min_price"
+                            step="0.01"
+                            min="0"
+                            placeholder="Min $"
+                            value="<?php echo $minPrice !== null ? htmlspecialchars((string)$minPrice, ENT_QUOTES, 'UTF-8') : ''; ?>"
+                            style="width: 50%; padding: 0.75rem 0.65rem; border: 1px solid var(--gray-300); border-radius: var(--radius-sm); font-size: 0.9rem; font-family: var(--font-main);">
+                        <input
+                            type="number"
+                            name="max_price"
+                            id="max_price"
+                            step="0.01"
+                            min="0"
+                            placeholder="Max $"
+                            value="<?php echo $maxPrice !== null ? htmlspecialchars((string)$maxPrice, ENT_QUOTES, 'UTF-8') : ''; ?>"
+                            style="width: 50%; padding: 0.75rem 0.65rem; border: 1px solid var(--gray-300); border-radius: var(--radius-sm); font-size: 0.9rem; font-family: var(--font-main);">
+                    </div>
+
+                    <!-- Sort Select Dropdown -->
+                    <div style="min-width: 160px; flex: 1;">
+                        <select name="sort" id="sort" class="filter-select" style="padding-left: 1rem;">
+                            <option value="newest" <?php echo ($sortOption === 'newest') ? 'selected' : ''; ?>>🕒 Newest First</option>
+                            <option value="price_asc" <?php echo ($sortOption === 'price_asc') ? 'selected' : ''; ?>>🏷️ Price: Low to High</option>
+                            <option value="price_desc" <?php echo ($sortOption === 'price_desc') ? 'selected' : ''; ?>>💎 Price: High to Low</option>
+                        </select>
+                    </div>
+
                     <!-- Action Buttons -->
                     <div class="filter-actions-group">
                         <button type="submit" class="btn-primary">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                            Filter Results
+                            Filter
                         </button>
 
-                        <?php if ($searchQuery !== '' || $categoryId > 0) : ?>
+                        <?php if ($searchQuery !== '' || $categoryId > 0 || $minPrice !== null || $maxPrice !== null || $sortOption !== 'newest') : ?>
                             <a href="marketplace.php" class="btn-outline" style="border-color: var(--gray-300); color: var(--gray-600);">
                                 Reset
                             </a>
@@ -270,6 +335,18 @@ try {
                     <?php if (!empty($selectedCatName)) : ?>
                         <span class="active-filter-badge">
                             Category: <?php echo htmlspecialchars($selectedCatName, ENT_QUOTES, 'UTF-8'); ?>
+                        </span>
+                    <?php endif; ?>
+
+                    <?php if ($minPrice !== null || $maxPrice !== null) : ?>
+                        <span class="active-filter-badge">
+                            Price: $<?php echo $minPrice !== null ? $minPrice : '0'; ?> – $<?php echo $maxPrice !== null ? $maxPrice : '∞'; ?>
+                        </span>
+                    <?php endif; ?>
+
+                    <?php if ($sortOption !== 'newest') : ?>
+                        <span class="active-filter-badge">
+                            Sort: <?php echo $sortOption === 'price_asc' ? 'Price Low-High' : 'Price High-Low'; ?>
                         </span>
                     <?php endif; ?>
                 </div>
