@@ -53,8 +53,8 @@ $fullName   = $isLoggedIn ? htmlspecialchars((string) ($_SESSION['full_name'] ??
                         Sign In
                     </a>
                     <a href="#register" class="btn-primary">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                        Post Item
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                        Create Account
                     </a>
                 <?php endif; ?>
             </div>
@@ -110,7 +110,25 @@ $fullName   = $isLoggedIn ? htmlspecialchars((string) ($_SESSION['full_name'] ??
                             My Listings
                         </a>
                     </li>
+                    <li>
+                        <a href="profile.php">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            My Profile
+                        </a>
+                    </li>
                 <?php else : ?>
+                    <li>
+                        <a href="#register">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                            Register
+                        </a>
+                    </li>
+                    <li>
+                        <a href="login.php">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13 12H3"/></svg>
+                            Login
+                        </a>
+                    </li>
                     <li>
                         <a href="#about">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon svg-icon-sm"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
@@ -211,85 +229,117 @@ $fullName   = $isLoggedIn ? htmlspecialchars((string) ($_SESSION['full_name'] ??
                 </div>
             </section>
 
-            <!-- Student Registration -->
-            <section id="register" class="registration-section">
-                <h2>Student Registration</h2>
+            <?php if (!$isLoggedIn) : ?>
+                <!-- Student Registration for Visitors -->
+                <section id="register" class="registration-section">
+                    <h2>Student Registration</h2>
 
-                <form id="registration-form" class="registration-form" novalidate>
-                    <div class="form-group">
-                        <label for="full-name">Full Name</label>
-                        <div class="input-icon-group">
-                            <input
-                                type="text"
-                                id="full-name"
-                                name="full-name"
-                                placeholder="e.g. Alex Morgan"
-                                autocomplete="name"
-                                required>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon input-icon"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <form id="registration-form" class="registration-form" novalidate>
+                        <div class="form-group">
+                            <label for="full-name">Full Name</label>
+                            <div class="input-icon-group">
+                                <input
+                                    type="text"
+                                    id="full-name"
+                                    name="full-name"
+                                    placeholder="e.g. Alex Morgan"
+                                    autocomplete="name"
+                                    required>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon input-icon"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">University Email</label>
+                            <div class="input-icon-group">
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    placeholder="e.g. alex@university.edu"
+                                    autocomplete="email"
+                                    required>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon input-icon"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="student-id">Student ID</label>
+                            <div class="input-icon-group">
+                                <input
+                                    type="text"
+                                    id="student-id"
+                                    name="student-id"
+                                    placeholder="e.g. STU-98765"
+                                    required>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon input-icon"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="13" y2="12"/></svg>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="department">Department</label>
+                            <div class="input-icon-group">
+                                <input
+                                    type="text"
+                                    id="department"
+                                    name="department"
+                                    placeholder="e.g. Computer Science"
+                                    required>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon input-icon"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="input-icon-group">
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    placeholder="At least 6 characters"
+                                    autocomplete="new-password"
+                                    required>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon input-icon"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary">
+                            Register Account
+                        </button>
+                        <div id="form-message" role="alert" aria-live="polite"></div>
+                    </form>
+                </section>
+            <?php else : ?>
+                <!-- Student Portal Quick Hub for Authenticated Users -->
+                <section class="registration-section">
+                    <h2>Student Quick Hub</h2>
+                    <div class="registration-form" style="text-align: center; max-width: 600px;">
+                        <div style="width: 56px; height: 56px; background-color: var(--primary-light); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                        </div>
+                        <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--dark); margin-bottom: 0.5rem;">Welcome back, <?php echo $fullName; ?>!</h3>
+                        <p style="color: var(--gray-600); font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.5;">You are logged in to your verified student account. Access your active listings, campus meetup reservations, and student profile below.</p>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.75rem;">
+                            <a href="dashboard.php" class="btn-primary" style="font-size: 0.875rem; padding: 0.65rem 0.75rem; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.35rem;">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                                Dashboard
+                            </a>
+                            <a href="my_listings.php" class="btn-outline" style="font-size: 0.875rem; padding: 0.65rem 0.75rem; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.35rem; color: var(--dark); border-color: var(--gray-300);">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                                My Listings
+                            </a>
+                            <a href="my_orders.php" class="btn-outline" style="font-size: 0.875rem; padding: 0.65rem 0.75rem; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.35rem; color: var(--dark); border-color: var(--gray-300);">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/></svg>
+                                Orders
+                            </a>
+                            <a href="create_product.php" class="btn-outline" style="font-size: 0.875rem; padding: 0.65rem 0.75rem; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.35rem; color: var(--primary); border-color: var(--primary); font-weight: 700;">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                Post Item
+                            </a>
                         </div>
                     </div>
-
-                    <div class="form-group">
-                        <label for="email">University Email</label>
-                        <div class="input-icon-group">
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                placeholder="e.g. alex@university.edu"
-                                autocomplete="email"
-                                required>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon input-icon"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="student-id">Student ID</label>
-                        <div class="input-icon-group">
-                            <input
-                                type="text"
-                                id="student-id"
-                                name="student-id"
-                                placeholder="e.g. STU-98765"
-                                required>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon input-icon"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="13" y2="12"/></svg>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="department">Department</label>
-                        <div class="input-icon-group">
-                            <input
-                                type="text"
-                                id="department"
-                                name="department"
-                                placeholder="e.g. Computer Science"
-                                required>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon input-icon"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <div class="input-icon-group">
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                placeholder="At least 6 characters"
-                                autocomplete="new-password"
-                                required>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon input-icon"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn-primary">
-                        Register Account
-                    </button>
-                    <div id="form-message" role="alert" aria-live="polite"></div>
-                </form>
-            </section>
+                </section>
+            <?php endif; ?>
 
             <!-- How It Works -->
             <section class="workflow-section">
